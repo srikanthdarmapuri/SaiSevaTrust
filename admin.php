@@ -124,13 +124,13 @@
           <h2>Events</h2>
           <table>
               <tbody>
-              <th>Id</th>
+              <th>S No</th>
               <th>Image</th>
               <th>Description</th>
               <th>Action</th>
-              <?php foreach ($data['events'] as $evnt) { ?>
-                <tr>
-                  <td><?= $evnt['Id'] ?></td>
+              <?php foreach ($data['events'] as $index => $evnt) { ?>
+              <tr id="<?= $evnt['Id']?>">
+                  <td><?= $index+1 ?></td>
                   <td><?= $evnt['Desc'] ?></td>
                   <td><?= $evnt['Img'] ?></td>
                   <td><button>Edit</button> <button>Remove</button></td>
@@ -143,13 +143,13 @@
           <h2>Donors</h2>
           <table>
               <tbody>
-              <th>Id</th>
+              <th>S No</th>
               <th>Image</th>
               <th>Description</th>
               <th>Action</th>
-              <?php foreach ($data['donors'] as $donor) { ?>
-                <tr>
-                  <td><?= $donor['Id'] ?></td>
+              <?php foreach ($data['donors'] as $index => $donor) { ?>
+              <tr id="<?= $donor['Id'] ?>">
+                  <td><?= $index+1 ?></td>
                   <td><?= $donor['Desc'] ?></td>
                   <td><?= $donor['Img'] ?></td>
                   <td><button>Edit</button> <button>Remove</button></td>
@@ -160,6 +160,8 @@
           </table>
           </div>
 <?php } ?>
+      <script src="js/jquery.js"></script>
+      <script src="js/admin.js"></script>      
     </body>
   </html> 
   
