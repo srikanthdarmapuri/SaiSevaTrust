@@ -90,6 +90,8 @@
                         <ul class="nav navbar-nav navbar-right">
                             <li><a href="#top">Home</a></li>
                             <li><a href="#about-us">About Us</a></li>
+                            <li><a href="#events">Events</a></li>
+                            <li><a href="#donors">Donors</a></li>
 <!--                            <li><a href="#stories">Our Success</a></li>	-->
                             <li><a href="#help">Help</a></li>
                             <li><a href="#gallery">Life at Sai Seva Trust</a></li>
@@ -131,7 +133,27 @@
                 <div class="col-md-1"></div>
             </div>
         </div>
+        
+        <div id="events" class="container">
+            <div class="row">
+                <div class="col-md-10 welcome_txt text-center animate_bottom">
+                  <div class="row">
+                    <h1 style="text-align: center; height: 800px">Events</h1>    
+                  </div>
+                <div class="col-md-1"></div>
+            </div>
+        </div>
 
+        
+        <div id="donors" class="container">
+            <div class="row">
+                <div class="col-md-10 welcome_txt text-center animate_bottom">
+                    <div class="row">
+                        <h1 style="text-align: center; height: 800px"">Donors</h1>
+                    </div>
+                <div class="col-md-1"></div>
+            </div>
+        </div>
 
         <!--this empty div is important dont remove it.-->
         <div id="units"></div>
