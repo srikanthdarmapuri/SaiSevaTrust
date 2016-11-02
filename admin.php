@@ -20,6 +20,8 @@
       <title>Admin</title>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <!-- Bootstrap core CSS -->
+        <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
       <style>
               html, body {
                   width: 100%;
@@ -102,6 +104,25 @@
           </style>
       </head>
       <body>
+          <div class="modal fade" id="myModal" role="dialog">
+              <div class="modal-dialog">
+                  <!-- Modal content-->
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <button type="button" class="close" data-dismiss="modal">&times;</button>
+                          <h4 class="modal-title"></h4>
+                      </div>
+                      <div class="modal-body">
+                          <textarea></textarea>
+                      </div>
+                      <div class="modal-footer">
+                          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                          <button type="button" class="btn btn-success" data-dismiss="modal">Save</button>
+                      </div>
+                  </div>
+
+              </div>
+          </div>
 <?php if(!$login) { ?>
           <div id="container">
               <form method="post" action="admin.php">
@@ -122,7 +143,7 @@
   ?>
           <div id="">
           <h2>Events</h2>
-          <table>
+          <table id="events">
               <tbody>
               <th>S No</th>
               <th>Image</th>
@@ -132,27 +153,29 @@
               <tr id="<?= $evnt['Id']?>">
                   <td><?= $index+1 ?></td>
                   <td><?= $evnt['Desc'] ?></td>
-                  <td><?= $evnt['Img'] ?></td>
-                  <td><button>Edit</button> <button>Remove</button></td>
+                  <td><img src="<?= $evnt['Img'] ?>"</td>
+                  <td><button class="edt">Edit</button> <button class="rmv">Remove</button></td>
                 </tr>
               <?php } ?>
-              <tr><td colspan="5" style="text-align: center"><button>New</button></td></tr>
+                <tr><td colspan="5" style="text-align: center"><button class="new">New</button></td></tr>
               </tbody>
           </table>
           
           <h2>Donors</h2>
-          <table>
+          <table id="donors">
               <tbody>
               <th>S No</th>
               <th>Image</th>
               <th>Description</th>
+              <th>Email</th>
               <th>Action</th>
               <?php foreach ($data['donors'] as $index => $donor) { ?>
               <tr id="<?= $donor['Id'] ?>">
                   <td><?= $index+1 ?></td>
                   <td><?= $donor['Desc'] ?></td>
-                  <td><?= $donor['Img'] ?></td>
-                  <td><button>Edit</button> <button>Remove</button></td>
+                  <td><img src="<?= $donor['Img'] ?>"</td>
+                  <td><?= $donor['Email'] ?></td>
+                  <td><button class="edt">Edit</button> <button class="rmv">Remove</button></td>
                 </tr>
               <?php } ?>
               <tr><td colspan="5" style="text-align: center"><button>New</button></td></tr>
@@ -161,6 +184,7 @@
           </div>
 <?php } ?>
       <script src="js/jquery.js"></script>
+      <script src="assets/bootstrap/js/bootstrap.min.js"></script>
       <script src="js/admin.js"></script>      
     </body>
   </html> 
