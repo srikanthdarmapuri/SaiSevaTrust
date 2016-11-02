@@ -116,21 +116,64 @@
                   <p style="color: red; text-transform: bold; text-align: center;"><?= $error ?></p>
               </form>
           </div>
-<?php } else { ?>
+<?php } else { 
+  
+   $data = getDonorsAndEvents();
+  ?>
+          <div id="">
+          <h2>Events</h2>
           <table>
               <tbody>
               <th>Id</th>
               <th>Image</th>
               <th>Description</th>
               <th>Action</th>
-              <tr>
-                  <td>df</td>
-              </tr>
-              <tr>
-                  <td>df</td>
-              </tr>
+              <?php foreach ($data['events'] as $evnt) { ?>
+                <tr>
+                  <td><?= $evnt['Id'] ?></td>
+                  <td><?= $evnt['Desc'] ?></td>
+                  <td><?= $evnt['Img'] ?></td>
+                  <td><button>Edit</button> <button>Remove</button></td>
+                </tr>
+              <?php } ?>
+              <tr><td colspan="5" style="text-align: center"><button>New</button></td></tr>
               </tbody>
           </table>
+          
+          <h2>Donors</h2>
+          <table>
+              <tbody>
+              <th>Id</th>
+              <th>Image</th>
+              <th>Description</th>
+              <th>Action</th>
+              <?php foreach ($data['donors'] as $donor) { ?>
+                <tr>
+                  <td><?= $donor['Id'] ?></td>
+                  <td><?= $donor['Desc'] ?></td>
+                  <td><?= $donor['Img'] ?></td>
+                  <td><button>Edit</button> <button>Remove</button></td>
+                </tr>
+              <?php } ?>
+              <tr><td colspan="5" style="text-align: center"><button>New</button></td></tr>
+              </tbody>
+          </table>
+          </div>
 <?php } ?>
     </body>
-  </html>          
+  </html> 
+  
+  
+  <?php
+  
+  function getDonorsAndEvents() {
+    $db = (new PDO('mysql:host=localhost;dbname=sst_database', 'root', 'dambo'));
+    
+    $tmp = $db->query("SELECT * FROM donors WHERE Is_Actv = 1 ORDER BY Tm DESC");
+    $d = $tmp->fetchAll(PDO::FETCH_ASSOC);
+    
+    $temp = $db->query("SELECT * FROM events WHERE Is_Actv = 1 ORDER BY Tm DESC");
+    $e = $temp->fetchAll(PDO::FETCH_ASSOC);
+    return array("events" => $e, "donors" => $d);
+  }
+  ?>
