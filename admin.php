@@ -7,6 +7,18 @@
       $error = "Invalid credentials!!.";
     }
   }
+  else if(isset($_POST['nevt'])) {
+    $this->createEvent();
+  }
+  else if(isset($_POST['ndonr'])) {
+    $this->createDonor();
+  }
+  else if(isset($_POST['eevt'])) {
+    $this->editEvent();
+  }
+  else if(isset($_POST['edonr'])) {
+    $this->editDonor();
+  }
 
   if (!isset($_COOKIE['admin'])) {
     $login = false;
@@ -104,25 +116,7 @@
           </style>
       </head>
       <body>
-          <div class="modal fade" id="myModal" role="dialog">
-              <div class="modal-dialog">
-                  <!-- Modal content-->
-                  <div class="modal-content">
-                      <div class="modal-header">
-                          <button type="button" class="close" data-dismiss="modal">&times;</button>
-                          <h4 class="modal-title"></h4>
-                      </div>
-                      <div class="modal-body">
-                          <textarea></textarea>
-                      </div>
-                      <div class="modal-footer">
-                          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                          <button type="button" class="btn btn-success" data-dismiss="modal">Save</button>
-                      </div>
-                  </div>
-
-              </div>
-          </div>
+          <div class="modal fade" id="myModal" role="dialog"></div>
 <?php if(!$login) { ?>
           <div id="container">
               <form method="post" action="admin.php">
@@ -146,11 +140,11 @@
           <table id="events">
               <tbody>
               <th>S No</th>
-              <th>Image</th>
               <th>Description</th>
+              <th>Image</th>
               <th>Action</th>
               <?php foreach ($data['events'] as $index => $evnt) { ?>
-              <tr id="<?= $evnt['Id']?>">
+              <tr data-info='<?= json_encode($evnt)?>' id="<?= $evnt['Id']?>">
                   <td><?= $index+1 ?></td>
                   <td><?= $evnt['Desc'] ?></td>
                   <td><img src="<?= $evnt['Img'] ?>"</td>
@@ -165,8 +159,8 @@
           <table id="donors">
               <tbody>
               <th>S No</th>
-              <th>Image</th>
               <th>Description</th>
+              <th>Image</th>
               <th>Email</th>
               <th>Action</th>
               <?php foreach ($data['donors'] as $index => $donor) { ?>
@@ -178,7 +172,7 @@
                   <td><button class="edt">Edit</button> <button class="rmv">Remove</button></td>
                 </tr>
               <?php } ?>
-              <tr><td colspan="5" style="text-align: center"><button>New</button></td></tr>
+              <tr><td colspan="5" style="text-align: center"><button class="new">New</button></td></tr>
               </tbody>
           </table>
           </div>
@@ -201,5 +195,73 @@
     $temp = $db->query("SELECT * FROM events WHERE Is_Actv = 1 ORDER BY Tm DESC");
     $e = $temp->fetchAll(PDO::FETCH_ASSOC);
     return array("events" => $e, "donors" => $d);
+  }
+  
+  function createEvent() {
+    $db = getDB();
+    $time = time();
+    $id = md5($time."NeWeVnT".  rand(21, 521));
+    $desc = $_POST['dsc'];
+    $img = $_POST['img'];
+    $sts = $db->query("INSERT INTO events VALUES('.$id.', ".$db->quote($desc).", ".$db->quote($img).", 1 '.$time.')");
+    if($sts) {
+      return 1;
+    }
+    else {
+      return 0;
+    }
+  }
+  
+  function editEvent() {
+    $db = getDB();
+    $id = $_POST['id'];
+    $desc = $_POST['dsc'];
+    $img = $_POST['img'];
+    $sts = $db->query("UPDATE events SET Desc = ".$db->quote($desc).", Img = ".$db->quote($img)." WHERE Id = ".$db->quote($id));
+    if($sts) {
+      return 1;
+    }
+    else {
+      return 0;
+    }
+  }
+  
+  function createDonor() {
+    $db = getDB();
+    
+    $db = getDB();
+    $time = time();
+    $id = md5($time."NeWeVnT".  rand(21, 521));
+    $desc = $_POST['dsc'];
+    $img = $_POST['img'];
+    $email = $_POST['eml'];
+    $sts = $db->query("INSERT INTO donors VALUES('.$id.', ".$db->quote($desc).", ".$db->quote($img).", ".$db->quote($email).", 1 '.$time.')");
+    if($sts) {
+      return 1;
+    }
+    else {
+      return 0;
+    }
+  }
+  
+  function editDonor() {
+    $db = getDB();
+    
+    $db = getDB();
+    $id = $_POST['id'];
+    $desc = $_POST['dsc'];
+    $img = $_POST['img'];
+    $email = $_POST['eml'];
+    $sts = $db->query("UPDATE donors SET Desc = ".$db->quote($desc).", Img = ".$db->quote($img).", Email = ".$db->quote($email)." WHERE Id = ".$db->quote($id));
+    if($sts) {
+      return 1;
+    }
+    else {
+      return 0;
+    }
+  }
+  
+  function getDB() {
+    $db = (new PDO('mysql:host=localhost;dbname=sst_database', 'root', 'dambo'));
   }
   ?>
