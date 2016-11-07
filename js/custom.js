@@ -27,7 +27,7 @@
 				play:2000,
 				pagination:false,
 				inherit_width_from: '.top',
-//				inherit_height_from: '.top'
+				inherit_height_from: '.top'
 			});			
 				
             jQuery("#pageLoad").animateNumbers(768, true, 2000);
