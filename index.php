@@ -90,8 +90,8 @@
                         <ul class="nav navbar-nav navbar-right">
                             <li><a href="#top">Home</a></li>
                             <li><a href="#about-us">About Us</a></li>
-                            <!--<li><a href="#events">Events</a></li>-->
-                            <!--<li><a href="#donors">Donors</a></li>-->
+                            <li><a href="#events">Events</a></li>
+                            <li><a href="#donors">Donors</a></li>
 <!--                            <li><a href="#stories">Our Success</a></li>	-->
                             <li><a href="#help">Help</a></li>
                             <li><a href="#gallery">Life at Sai Seva Trust</a></li>
@@ -134,26 +134,56 @@
             </div>
         </div>
         
-<!--        <div id="events" class="container">
+        <?php 
+          require 'generic.php';
+          $dt = getDonorsAndEvents();
+        ?>
+        <div id="events" class="container text-center">
             <div class="row">
-                <div class="col-md-10 welcome_txt text-center animate_bottom">
+                <div class="col-md-12 welcome_txt text-center animate_bottom">
                   <div class="row">
-                    <h1 style="text-align: center; height: 800px">Events</h1>    
+                      <div class="col-md-12 text-center heading dark animate_top" style="opacity: 1; top: 0px;">
+                        EVEN <span class="fff">TS</span>
+                      </div>
+                      <div id="wrapper">
+                          <div id="columns">
+                              <?php foreach ($dt['events'] as $evt) { ?>
+                                <div class="pin">
+                                  <img src="images/uploads/<?= $evt["Img"]?>" />
+                                  <p><?= $evt["Desc"]?></p>
+                                </div>
+                              <?php } ?>
+                          </div>
+                      </div>
                   </div>
                 <div class="col-md-1"></div>
             </div>
         </div>
+        </div>    
 
         
         <div id="donors" class="container">
             <div class="row">
-                <div class="col-md-10 welcome_txt text-center animate_bottom">
+                <div class="col-md-12 welcome_txt text-center animate_bottom">
                     <div class="row">
-                        <h1 style="text-align: center; height: 800px"">Donors</h1>
+                        <div class="col-md-12 text-center heading dark animate_top" style="opacity: 1; top: 0px;">
+                            DONO <span class="fff">RS</span>
+                        </div>
+                        <div id="wrapper">
+                          <div id="columns">
+                              <?php foreach ($dt['donors'] as $dnr) { ?>
+                                <div class="pin">
+                                    <img src="images/uploads/<?= $dnr["Img"] ?>" />
+                                    <p><?= $dnr['Desc'] ?></p>
+                                    <p>Email: <?= $dnr["Email"] ?></p>
+                                </div>
+                              <?php } ?>
+                          </div>
+                      </div>
                     </div>
                 <div class="col-md-1"></div>
             </div>
-        </div>-->
+        </div>
 
         <!--this empty div is important dont remove it.-->
         <div id="units"></div>

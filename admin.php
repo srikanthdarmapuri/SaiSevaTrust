@@ -148,7 +148,7 @@
                   <td><?= $index+1 ?></td>
                   <td><?= $evnt['Desc'] ?></td>
                   <td><img src="<?= $evnt['Img'] ?>"</td>
-                  <td><button class="edt">Edit</button> <button class="rmv">Remove</button></td>
+                  <td><button class="edt" data-tp="E">Edit</button> <button class="rmv">Remove</button></td>
                 </tr>
               <?php } ?>
                 <tr><td colspan="5" style="text-align: center"><button class="new">New</button></td></tr>
@@ -169,7 +169,7 @@
                   <td><?= $donor['Desc'] ?></td>
                   <td><img src="<?= $donor['Img'] ?>"</td>
                   <td><?= $donor['Email'] ?></td>
-                  <td><button class="edt">Edit</button> <button class="rmv">Remove</button></td>
+                  <td><button class="edt" data-tp="D">Edit</button> <button class="rmv">Remove</button></td>
                 </tr>
               <?php } ?>
               <tr><td colspan="5" style="text-align: center"><button class="new">New</button></td></tr>
