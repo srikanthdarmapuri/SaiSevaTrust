@@ -7,17 +7,27 @@
       $error = "Invalid credentials!!.";
     }
   }
-  else if(isset($_POST['nevt'])) {
-    $this->createEvent();
+  else if($_POST['tp'] == 'nevt') {
+    echo createEvent(); return;
+    
   }
-  else if(isset($_POST['ndonr'])) {
-    $this->createDonor();
+  else if($_POST['tp'] == 'ndonr') {
+    echo createDonor(); return;
   }
-  else if(isset($_POST['eevt'])) {
-    $this->editEvent();
+  else if($_POST['tp'] == 'eevt') {
+    echo editEvent(); return;
   }
-  else if(isset($_POST['edonr'])) {
-    $this->editDonor();
+  else if($_POST['tp'] == 'edonr') {
+    echo editDonor(); return;
+  }
+  else if($_POST['tp'] == 'revt') {
+    echo removeEvent(); return;
+  }
+  else if($_POST['tp'] == 'rdonr') {
+    echo removeDonor(); return;
+  }
+  else if($_POST['tp'] == 'UI') {
+    echo uploadImage(); return;
   }
 
   if (!isset($_COOKIE['admin'])) {
@@ -146,12 +156,19 @@
               <?php foreach ($data['events'] as $index => $evnt) { ?>
               <tr data-info='<?= json_encode($evnt)?>' id="<?= $evnt['Id']?>">
                   <td><?= $index+1 ?></td>
-                  <td><?= $evnt['Desc'] ?></td>
-                  <td><img src="<?= $evnt['Img'] ?>"</td>
-                  <td><button class="edt" data-tp="E">Edit</button> <button class="rmv">Remove</button></td>
+                  <td class="desc"><?= $evnt['Dsc'] ?></td>
+                  <td class="img"><img style="height: 100px; width: 100px;" src='/images/<?= $evnt['Img'] ?>'/></td>
+                  <td>
+                      <button class="edt" data-tp="eevt">Edit</button>
+                      <button class="rmv" data-tp="revt">Remove</button>
+                  </td>
                 </tr>
               <?php } ?>
-                <tr><td colspan="5" style="text-align: center"><button class="new">New</button></td></tr>
+                <tr>
+                    <td colspan="5" style="text-align: center">
+                        <button class="new" data-tp="nevt">New</button>
+                    </td>
+                </tr>
               </tbody>
           </table>
           
@@ -164,15 +181,22 @@
               <th>Email</th>
               <th>Action</th>
               <?php foreach ($data['donors'] as $index => $donor) { ?>
-              <tr id="<?= $donor['Id'] ?>">
+              <tr data-info='<?= json_encode($donor)?>' id="<?= $donor['Id'] ?>">
                   <td><?= $index+1 ?></td>
-                  <td><?= $donor['Desc'] ?></td>
-                  <td><img src="<?= $donor['Img'] ?>"</td>
+                  <td><?= $donor['Dsc'] ?></td>
+                  <td><img style="height: 100px; width: 100px;" src="/images/<?= $donor['Img'] ?>"</td>
                   <td><?= $donor['Email'] ?></td>
-                  <td><button class="edt" data-tp="D">Edit</button> <button class="rmv">Remove</button></td>
+                  <td>
+                      <button class="edt" data-tp="edonr">Edit</button>
+                      <button class="rmv" data-tp="rdonr">Remove</button>
+                  </td>
                 </tr>
               <?php } ?>
-              <tr><td colspan="5" style="text-align: center"><button class="new">New</button></td></tr>
+              <tr>
+                  <td colspan="5" style="text-align: center">
+                      <button class="new" data-tp="ndonr">New</button>
+                  </td>
+              </tr>
               </tbody>
           </table>
           </div>
@@ -187,8 +211,7 @@
   <?php
   
   function getDonorsAndEvents() {
-    $db = (new PDO('mysql:host=localhost;dbname=sst_database', 'root', 'dambo'));
-    
+    $db = getDB();
     $tmp = $db->query("SELECT * FROM donors WHERE Is_Actv = 1 ORDER BY Tm DESC");
     $d = $tmp->fetchAll(PDO::FETCH_ASSOC);
     
@@ -203,11 +226,10 @@
     $id = md5($time."NeWeVnT".  rand(21, 521));
     $desc = $_POST['dsc'];
     $img = $_POST['img'];
-    $sts = $db->query("INSERT INTO events VALUES('.$id.', ".$db->quote($desc).", ".$db->quote($img).", 1 '.$time.')");
+    $sts = $db->query("INSERT INTO events VALUES('$id', ".$db->quote($desc).", ".$db->quote($img).", 1, '$time')");
     if($sts) {
       return 1;
-    }
-    else {
+    } else {
       return 0;
     }
   }
@@ -217,51 +239,78 @@
     $id = $_POST['id'];
     $desc = $_POST['dsc'];
     $img = $_POST['img'];
-    $sts = $db->query("UPDATE events SET Desc = ".$db->quote($desc).", Img = ".$db->quote($img)." WHERE Id = ".$db->quote($id));
+    $sts = $db->query("UPDATE events SET Dsc = ".$db->quote($desc).", Img = ".$db->quote($img)." WHERE Id = ".$db->quote($id));
     if($sts) {
       return 1;
-    }
-    else {
+    } else {
       return 0;
     }
   }
   
   function createDonor() {
     $db = getDB();
-    
-    $db = getDB();
     $time = time();
     $id = md5($time."NeWeVnT".  rand(21, 521));
     $desc = $_POST['dsc'];
     $img = $_POST['img'];
     $email = $_POST['eml'];
-    $sts = $db->query("INSERT INTO donors VALUES('.$id.', ".$db->quote($desc).", ".$db->quote($img).", ".$db->quote($email).", 1 '.$time.')");
+    $sts = $db->query("INSERT INTO donors VALUES('$id', ".$db->quote($desc).", ".$db->quote($img).", ".$db->quote($email).", 1, '$time')");
     if($sts) {
       return 1;
-    }
-    else {
+    } else {
       return 0;
     }
   }
   
   function editDonor() {
     $db = getDB();
-    
-    $db = getDB();
     $id = $_POST['id'];
     $desc = $_POST['dsc'];
     $img = $_POST['img'];
     $email = $_POST['eml'];
-    $sts = $db->query("UPDATE donors SET Desc = ".$db->quote($desc).", Img = ".$db->quote($img).", Email = ".$db->quote($email)." WHERE Id = ".$db->quote($id));
+    $sts = $db->query("UPDATE donors SET Dsc = ".$db->quote($desc).", Img = ".$db->quote($img).", Email = ".$db->quote($email)." WHERE Id = ".$db->quote($id));
     if($sts) {
       return 1;
-    }
-    else {
+    } else {
       return 0;
     }
   }
   
+  function removeEvent() {
+    $db = getDB();
+    $id = $_POST['id'];
+    $sts = $db->query("UPDATE events SET Is_Actv = 0 WHERE Id = ".$db->quote($id));
+    if($sts) {
+      return 1;
+    } else {
+      return 0;
+    }
+  }
+  
+  function removeDonor() {
+    $db = getDB();
+    $id = $_POST['id'];
+    $sts = $db->query("UPDATE donors SET Is_Actv = 0 WHERE Id = ".$db->quote($id));
+    if($sts) {
+      return 1;
+    } else {
+      return 0;
+    }
+  }
+  
+  function uploadImage() {
+    $image = $_FILES['file'];
+    $final_image = rand(1, 9999) . rand(1, 9999) . '-' . preg_replace('/[^a-z0-9-.]/', '', str_replace('_', '-', str_replace(' ', '-', preg_replace('/[^(\x20-\x7F)]*/', '', strtolower($image['name'])))));
+    $dest = dirname(__FILE__).'/images/'.$final_image;
+    if (move_uploaded_file($image["tmp_name"], $dest)) {
+        echo '{"status":1,"msg":"'.$final_image.'"}';
+    } else {
+      echo '{"status":0,"msg":"Something went wrong. Please try again."}';
+    }
+  }
+  
+  
   function getDB() {
-    $db = (new PDO('mysql:host=localhost;dbname=sst_database', 'root', 'dambo'));
+    return (new PDO('mysql:host=localhost;dbname=sst_database', 'root', 'dambo'));
   }
   ?>
