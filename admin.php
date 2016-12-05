@@ -1,8 +1,7 @@
 <?php
   if (isset($_POST['login'])) {
-    if ($_POST['username'] == 'admin' && $_POST['password'] == 'admin') {
-      setcookie('admin', 'admin', time() + (86400), "/admin.php");
-      $login = true;
+    if (authenticate($_POST['username'], $_POST['password'])) {
+     $error = "Login Success.";
     } else {
       $error = "Invalid credentials!!.";
     }
@@ -30,12 +29,6 @@
     echo uploadImage(); return;
   }
 
-  if (!isset($_COOKIE['admin'])) {
-    $login = false;
-  }
-  else {
-    $login = true;
-  }
 ?>
  <html>
     <head>
@@ -127,7 +120,7 @@
       </head>
       <body>
           <div class="modal fade" id="myModal" role="dialog"></div>
-<?php if(!$login) { ?>
+<?php if($_SESSION['un']) { ?>
           <div id="container">
               <form method="post" action="admin.php">
                   <input type="text" name="login" value="login" hidden>
@@ -157,7 +150,7 @@
               <tr data-info='<?= json_encode($evnt)?>' id="<?= $evnt['Id']?>">
                   <td><?= $index+1 ?></td>
                   <td class="desc"><?= $evnt['Dsc'] ?></td>
-                  <td class="img"><img style="height: 100px; width: 100px;" src='/images/<?= $evnt['Img'] ?>'/></td>
+                  <td class="img"><img style="height: 100px; width: 100px;" src='/images/uploads/<?= $evnt['Img'] ?>'/></td>
                   <td>
                       <button class="edt" data-tp="eevt">Edit</button>
                       <button class="rmv" data-tp="revt">Remove</button>
@@ -184,7 +177,7 @@
               <tr data-info='<?= json_encode($donor)?>' id="<?= $donor['Id'] ?>">
                   <td><?= $index+1 ?></td>
                   <td><?= $donor['Dsc'] ?></td>
-                  <td><img style="height: 100px; width: 100px;" src="/images/<?= $donor['Img'] ?>"</td>
+                  <td><img style="height: 100px; width: 100px;" src="/images/uploads/<?= $donor['Img'] ?>"</td>
                   <td><?= $donor['Email'] ?></td>
                   <td>
                       <button class="edt" data-tp="edonr">Edit</button>
@@ -226,11 +219,14 @@
     $id = md5($time."NeWeVnT".  rand(21, 521));
     $desc = $_POST['dsc'];
     $img = $_POST['img'];
+    if(empty($desc)) {
+      return '{"status":0,"msg":"Description cannot be empty."}';
+    }
     $sts = $db->query("INSERT INTO events VALUES('$id', ".$db->quote($desc).", ".$db->quote($img).", 1, '$time')");
     if($sts) {
-      return 1;
+      return '{"status":1,"msg":"Added successfully!!."}';
     } else {
-      return 0;
+      return '{"status":0,"msg":"Something went wrong. Please try again."}';
     }
   }
   
@@ -239,11 +235,14 @@
     $id = $_POST['id'];
     $desc = $_POST['dsc'];
     $img = $_POST['img'];
+    if(empty($desc)) {
+      return '{"status":0,"msg":"Description cannot be empty."}';
+    }
     $sts = $db->query("UPDATE events SET Dsc = ".$db->quote($desc).", Img = ".$db->quote($img)." WHERE Id = ".$db->quote($id));
     if($sts) {
-      return 1;
+      return '{"status":1,"msg":"Updated successfully!!."}';
     } else {
-      return 0;
+      return '{"status":0,"msg":"Something went wrong. Please try again."}';
     }
   }
   
@@ -254,11 +253,14 @@
     $desc = $_POST['dsc'];
     $img = $_POST['img'];
     $email = $_POST['eml'];
+    if(empty($desc)) {
+      return '{"status":0,"msg":"Description cannot be empty."}';
+    }
     $sts = $db->query("INSERT INTO donors VALUES('$id', ".$db->quote($desc).", ".$db->quote($img).", ".$db->quote($email).", 1, '$time')");
     if($sts) {
-      return 1;
+      return '{"status":1,"msg":"Added successfully!!."}';
     } else {
-      return 0;
+      return '{"status":0,"msg":"Something went wrong. Please try again."}';
     }
   }
   
@@ -268,11 +270,14 @@
     $desc = $_POST['dsc'];
     $img = $_POST['img'];
     $email = $_POST['eml'];
+    if(empty($desc)) {
+      return '{"status":0,"msg":"Description cannot be empty."}';
+    }
     $sts = $db->query("UPDATE donors SET Dsc = ".$db->quote($desc).", Img = ".$db->quote($img).", Email = ".$db->quote($email)." WHERE Id = ".$db->quote($id));
     if($sts) {
-      return 1;
+      return '{"status":1,"msg":"Updated successfully!!."}';
     } else {
-      return 0;
+      return '{"status":0,"msg":"Something went wrong. Please try again."}';
     }
   }
   
@@ -283,7 +288,7 @@
     if($sts) {
       return 1;
     } else {
-      return 0;
+      return '{"status":0,"msg":"Something went wrong. Please try again."}';
     }
   }
   
@@ -292,20 +297,34 @@
     $id = $_POST['id'];
     $sts = $db->query("UPDATE donors SET Is_Actv = 0 WHERE Id = ".$db->quote($id));
     if($sts) {
-      return 1;
+      return '{"status":1,"msg":"Removed successfully!!."}';
     } else {
-      return 0;
+      return '{"status":0,"msg":"Something went wrong. Please try again."}';
     }
   }
   
   function uploadImage() {
     $image = $_FILES['file'];
     $final_image = rand(1, 9999) . rand(1, 9999) . '-' . preg_replace('/[^a-z0-9-.]/', '', str_replace('_', '-', str_replace(' ', '-', preg_replace('/[^(\x20-\x7F)]*/', '', strtolower($image['name'])))));
-    $dest = dirname(__FILE__).'/images/'.$final_image;
+    $dest = dirname(__FILE__).'/images/uploads/'.$final_image;
     if (move_uploaded_file($image["tmp_name"], $dest)) {
-        echo '{"status":1,"msg":"'.$final_image.'"}';
+        return '{"status":1,"msg":"'.$final_image.'"}';
     } else {
-      echo '{"status":0,"msg":"Something went wrong. Please try again."}';
+      return '{"status":0,"msg":"Something went wrong. Please try again."}';
+    }
+  }
+  
+  function authenticate($usename, $password) {
+    $db = getDB();
+    $tmp = $db->query("SELECT * FROM users WHERE username = ".$db->quote($usename)." AND password = ".$db->quote($password));
+    $d = $tmp->fetch(PDO::FETCH_ASSOC);
+    if($d) {
+      session_start();
+      $_SESSION['un'] = $d['username'];
+      return $d;
+    }
+    else {
+      return false;
     }
   }
   

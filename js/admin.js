@@ -27,7 +27,7 @@ $(document).ready(function () {
                     '</div>'+
                 '</div></div>');
       if(data.Img != null) {
-        $('#myModal').find('.modal-body').append('<img id="img" style="height: 50px; height: 50px;" src="/images/'+data.Img+'">');
+        $('#myModal').find('.modal-body').append('<img id="img" style="height: 50px; height: 50px;" src="/images/uploads/'+data.Img+'">');
         $('#myModal').find('.upld').remove();
       }
     });
@@ -103,13 +103,12 @@ $(document).ready(function () {
             },
             success: function (res) {
               res = JSON.parse(res);
-              if(res == 1){
-                alert("updated successfully!!");
+              if(res.status == 1){
+                alert(res.msg);
                 location.reload();
               }
               else {
-                alert("Something went wrong please try again");
-                location.reload();
+                alert(res.msg);
               }
             }
           });
@@ -129,13 +128,12 @@ $(document).ready(function () {
             },
             success: function (res) {
               res = JSON.parse(res);
-              if(res == 1){
-                alert("Saved successfully!!");
-//                location.reload();
+              if(res.status == 1){
+                alert(res.msg);
+                location.reload();
               }
               else {
-                alert("Something went wrong please try again");
-                location.reload();
+                alert(res.msg);
               }
             }
           });
@@ -153,13 +151,12 @@ $(document).ready(function () {
             },
             success: function (res) {
               res = JSON.parse(res);
-              if(res == 1){
-                alert("Successfully removed");
+              if(res.status == 1){
+                alert(res.msg);
                 location.reload();
               }
               else {
-                alert("Something went wrong please try again");
-                location.reload();
+                alert(res.msg);
               }
             }
           });
@@ -181,7 +178,7 @@ $(document).ready(function () {
             success: function (res) {
                 res = JSON.parse(res);
                 if (res.status == '1') {
-                    $this.parent('.upld').append('<img style="height: 50px; height: 50px;" id="img" data-src='+res.msg+' src="/images/'+res.msg+'"/>');
+                    $this.parent('.upld').append('<img style="height: 50px; height: 50px;" id="img" data-src='+res.msg+' src="/images/uploads/'+res.msg+'"/>');
                     $this.remove();
                 } else {
                     alert("Something went wrong please try again");

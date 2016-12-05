@@ -113,7 +113,6 @@
                         ABOUT <span class="fff">US</span>
                     </div>
                     </div>
-                    <?php echo "My first PHP script!"; ?>
                     <p>Sai Seva Trust was started in 2002 by a group of 12 like minded people with a goal to provide home to children who are living in dire poverty and comfortable living to people in their old age . </p>
                     <p>Main objectives of the trust are </p>
                     <ul>
@@ -150,7 +149,7 @@
                               <?php foreach ($dt['events'] as $evt) { ?>
                                 <div class="pin">
                                   <img src="images/uploads/<?= $evt["Img"]?>" />
-                                  <p><?= $evt["Desc"]?></p>
+                                  <p><?= $evt["Dsc"]?></p>
                                 </div>
                               <?php } ?>
                           </div>
@@ -174,7 +173,7 @@
                               <?php foreach ($dt['donors'] as $dnr) { ?>
                                 <div class="pin">
                                     <img src="images/uploads/<?= $dnr["Img"] ?>" />
-                                    <p><?= $dnr['Desc'] ?></p>
+                                    <p><?= $dnr['Dsc'] ?></p>
                                     <p>Email: <?= $dnr["Email"] ?></p>
                                 </div>
                               <?php } ?>

@@ -89,7 +89,7 @@ a:focus{
 }
 
 .navbar > .container .navbar-brand {
-    /* margin-left: -20px; */
+     margin-left: -100px; 
 }
 .navbar-brand {
     float: left;
@@ -173,7 +173,7 @@ a:focus{
 }
 
 .subtitle{
-	font-size:37px;
+	font-size:32px;
 	color:#fff;
 	font-weight:200;
 	display:block;	
